@@ -1,26 +1,28 @@
 package utils;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class Freight {
 	private boolean in = false;
 	private String client;
 	private String construction;
-	private List<String> items;
+	private ArrayList<String> items;
 
 	public Freight(boolean in, String client, String construction) {
 		this.in = in;
 		this.client = client;
 		this.construction = construction;
+		items = new ArrayList<String>();
 	}
 
 	public void addItem(String newItem){
 		items.add(newItem);
 	}
 
+	//Formatter
+	public String toString(){
+		return client + "\n" + construction + "\n" + ((items.isEmpty())? "-": items.toString().replace(", ","\n"));
+	}
 
 
 	// Getters
@@ -53,7 +55,7 @@ public class Freight {
 		this.construction = construction;
 	}
 
-	public void setItems(List<String> items) {
+	public void setItems(ArrayList<String> items) {
 		this.items = items;
 	}
 }
