@@ -31,14 +31,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        primaryStage.setTitle("RUTA");
-        button = new Button("Hola");
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                AlertBox.display("Well","Hello there");
-            }
-        });
 
         //Items
         Freight freight1 = new Freight(true, "Glez","Buga1");
@@ -48,11 +40,11 @@ public class Main extends Application {
         freight1.addItem("3Mon");
         freight1.addItem("1Algo");
 
+        //Store items
         ArrayList<Freight> freights = new ArrayList<Freight>();
         freights.add(freight1);
         freights.add(freight2);
         freights.add(freight3);
-
 
         //Create grid
         GridPane grid = new GridPane();
@@ -60,6 +52,11 @@ public class Main extends Application {
         grid.setVgap(8);
         grid.setHgap(10);
         grid.setGridLinesVisible(true);
+        GridPane.setColumnSpan(new Text(),7);
+        for(int i = 0; i < 7; i++) {
+            grid.getColumnConstraints().add(new ColumnConstraints(100));
+            grid.getRowConstraints().add(new RowConstraints(100));
+        }
 
         grid.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
@@ -79,66 +76,35 @@ public class Main extends Application {
         });
 
         //Add items to grid
-        GridPane.setColumnSpan(new Text(),7);
-        for(int i = 0; i < 7; i++) {
-            grid.getColumnConstraints().add(new ColumnConstraints(100));
-            grid.getRowConstraints().add(new RowConstraints(100));
+        int i = 0, j = 0;
+        for(Freight freight : freights) {
+            Text text1 = new Text(freight.toString());
+            text1.setFill(Color.WHITE);
+            VBox box1 = new VBox(text1);
+            box1.setStyle("-fx-background-color: " +
+                    (freight.isIn() ? "rgba(0, 150, 0, 1);"
+                            : "rgba(150, 50, 0, 1);"));
+
+            box1.setOnDragDetected(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    Dragboard drag_board = box1.startDragAndDrop(TransferMode.ANY);
+
+                    ClipboardContent content = new ClipboardContent();
+                    String msg = box1.toString();
+                    content.putString(msg);
+                    drag_board.setContent(content);
+                    event.consume();
+                }
+            });
+
+            //Add VBoxes to grid
+            grid.add(box1, j, i++);
         }
 
-        VBox box1 = new VBox(new Text(freight1.toString()));
-        box1.setStyle("-fx-background-color: " +
-                (freight1.isIn() ? "rgba(0, 255, 0, 0.3);"
-                    : "rgba(255, 0, 0, 0.3);"));
-        box1.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Dragboard drag_board = box1.startDragAndDrop(TransferMode.ANY);
-
-                ClipboardContent content = new ClipboardContent();
-                String msg = box1.toString();
-                content.putString(msg);
-                drag_board.setContent(content);
-                event.consume();
-            }
-        });
-
-        VBox box2 = new VBox(new Text(freight2.toString()));
-        box1.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Dragboard drag_board = box2.startDragAndDrop(TransferMode.ANY);
-
-                ClipboardContent content = new ClipboardContent();
-                String msg = box2.toString();
-                content.putString(msg);
-                drag_board.setContent(content);
-                event.consume();
-            }
-        });
-
-        VBox box3 = new VBox(new Text(freight3.toString()));
-        box1.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Dragboard drag_board = box3.startDragAndDrop(TransferMode.ANY);
-
-                ClipboardContent content = new ClipboardContent();
-                String msg = box3.toString();
-                content.putString(msg);
-                drag_board.setContent(content);
-                event.consume();
-            }
-        });
-
-        //Add VBoxes to grid
-        grid.add(box1, 0, 0);
-        grid.add(box2, 0, 1);
-        grid.add(box3, 1, 0);
-
-
-
-
-        Scene scene = new Scene(grid, 800,800);
+        //Create scene and stage
+        Scene scene = new Scene(grid, 800,800, Color.BLACK);
+        primaryStage.setTitle("RUTA");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
