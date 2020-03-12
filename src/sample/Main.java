@@ -43,11 +43,7 @@ public class Main extends Application {
         Text text1 = new Text("cuado1");
         Text text2 = new Text("cuado2");
         Text text3 = new Text("cuado3");
-        HBox titles = new HBox(20);
-        VBox layout = new VBox(20);
-        layout.getChildren().addAll(text1, text2);
-        VBox layout2 = new VBox(20);
-        layout2.getChildren().add(text3);
+
 
         //Create grid
         GridPane grid = new GridPane();
@@ -69,23 +65,6 @@ public class Main extends Application {
             }
         });
 
-        layout2.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if(event.getGestureSource() != layout2 &&
-                        event.getDragboard().hasString()){
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-                event.consume();
-            }
-        });
-        layout2.setOnDragExited(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                //TODO: find dragged item
-            }
-        });
-
         grid.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -96,12 +75,18 @@ public class Main extends Application {
                 event.consume();
             }
         });
+        grid.setOnDragExited(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                //TODO: find dragged item
+            }
+        });
 
+        //Add items to grid
         GridPane.setConstraints(text1, 0, 0);
         GridPane.setConstraints(text2, 0, 1);
         GridPane.setConstraints(text3, 1, 0);
         grid.getChildren().addAll(text1, text2, text3);
-        //titles.getChildren().addAll(grid, layout, layout2);
 
         Scene scene = new Scene(grid, 300,250);
         primaryStage.setScene(scene);
