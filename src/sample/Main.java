@@ -3,6 +3,7 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,8 +23,6 @@ import java.util.Collections;
 
 
 public class Main extends Application {
-
-    Button button;
 
     public static void main(String[] args) {
         launch(args);
@@ -57,7 +56,6 @@ public class Main extends Application {
             grid.getColumnConstraints().add(new ColumnConstraints(100));
             grid.getRowConstraints().add(new RowConstraints(100));
         }
-
         grid.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -68,12 +66,14 @@ public class Main extends Application {
                 event.consume();
             }
         });
+        /*
         grid.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //TODO: find dragged item
+                //find dragged item
             }
         });
+        */
 
         //Add items to grid
         int i = 0, j = 0;
@@ -91,10 +91,18 @@ public class Main extends Application {
                     Dragboard drag_board = box1.startDragAndDrop(TransferMode.ANY);
 
                     ClipboardContent content = new ClipboardContent();
-                    String msg = box1.toString();
-                    content.putString(msg);
+                    String msg = text1.toString();
+                    content.putString(freight.toString());
                     drag_board.setContent(content);
                     event.consume();
+                }
+            });
+            box1.setOnDragDropped(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    Double x = event.getSceneX();
+                    Double y = event.getSceneY();
+                    box1.setStyle("-fx-background-color: rgba(255, 225, 255, 1);");
                 }
             });
 
